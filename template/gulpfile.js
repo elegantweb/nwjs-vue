@@ -18,7 +18,7 @@ var server
 
 gulp.task('copy-package.json', () => {
   return gulp.src('app/package.json')
-    .pipe(gulpIf(process.env.NODE_ENV == 'production', gulpJsonEditor({main: 'index.html'})))
+    .pipe(gulpIf(process.env.NODE_ENV === 'production', gulpJsonEditor({main: 'index.html'})))
     .pipe(gulp.dest('dist'))
 })
 
@@ -45,13 +45,6 @@ gulp.task('serve', (done) => {
   var hotMiddleware = webpackHotMiddleware(compiler, {
     log: false,
     heartbeat: 2500
-  })
-
-  compiler.plugin('compilation', (compilation) => {
-    compilation.plugin('html-webpack-plugin-after-emit', (data, cb) => {
-      hotMiddleware.publish({ action: 'reload' })
-      cb()
-    })
   })
 
   server = new WebpackDevServer(compiler, {

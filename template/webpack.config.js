@@ -1,11 +1,11 @@
-var path = require('path');
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
+var path = require('path')
+var webpack = require('webpack')
+var HtmlWebpackPlugin = require('html-webpack-plugin')
+var ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
 
-var { dependencies } = require('./app/package.json');
+var { dependencies } = require('./app/package.json')
 
-module.exports = {
+var config = {
   devtool: '#cheap-module-eval-source-map',
   target: 'node-webkit',
   entry: [
@@ -17,10 +17,10 @@ module.exports = {
   },
   externals: [
     function(context, request, callback) {
-      if (undefined !== dependencies[request]) {
-        return callback(null, 'commonjs ' + request);
+      if (undefined === dependencies[request]) {
+        callback()
       } else {
-        callback();
+        return callback(null, 'commonjs ' + request)
       }
     }
   ],
@@ -35,7 +35,7 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
-          extractCSS: process.env.NODE_ENV == 'production',
+          extractCSS: process.env.NODE_ENV === 'production',
           loaders: {
             scss: 'vue-style-loader!css-loader!sass-loader'
           }
@@ -78,16 +78,23 @@ module.exports = {
     }
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: process.env.NODE_ENV
-      }
-    }),
     new ExtractTextWebpackPlugin('app.css'),
-    new HtmlWebpackPlugin({
-      template: 'app/index.ejs'
-    }),
+    new HtmlWebpackPlugin({ template: 'app/index.ejs' }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
   ]
 }
+
+if (process.env.NODE_ENV === 'production') {
+  config.devtool = ''
+  config.plugins.push(
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': '"production"'
+    }),
+    new webpack.LoaderOptionsPlugin({
+      minimize: true
+    })
+  )
+}
+
+module.exports = config
