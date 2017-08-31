@@ -1,0 +1,14 @@
+{
+  "name": "{{ name }}",
+  "version": "1.0.0",
+  "main": "http://localhost:9080",
+  "node-remote": "*://localhost/*",
+  "window": {
+    "width": 1000,
+    "height": 563
+  },
+  "build": {
+    "nwVersion": "0.24.4",
+    "output": "./../build"
+  }
+}
