@@ -17,8 +17,5 @@
   "bugs": {
     "url": "https://github.com/elegantweb/nwjs-vue/issues"
   },
-  "homepage": "https://github.com/elegantweb/nwjs-vue#readme",
-  "dependencies": {
-    "string": "^3.3.3"
-  }
+  "homepage": "https://github.com/elegantweb/nwjs-vue#readme"
 }

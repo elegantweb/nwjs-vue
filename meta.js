@@ -1,19 +1,9 @@
-var S = require('string')
-
 module.exports = {
   prompts: {
     name: {
       type: 'string',
       required: true,
       message: 'Application name'
-    },
-    title: {
-      type: 'string',
-      required: false,
-      message: 'Application title',
-      default (data) {
-        return S(data.name).humanize().titleCase().s
-      }
     },
     description: {
       type: 'string',
