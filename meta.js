@@ -5,6 +5,12 @@ module.exports = {
       required: true,
       message: 'Application Name'
     },
+    description: {
+      type: 'string',
+      required: false,
+      message: 'Project description',
+      default: 'An nwjs-vue project'
+    },
     plugins: {
       type: 'checkbox',
       message: 'Select which Vue plugins to install',
