@@ -9,7 +9,7 @@ module.exports = {
       type: 'string',
       required: false,
       message: 'Project description',
-      default: 'An nwjs-vue project'
+      default: 'A nwjs-vue application'
     },
     plugins: {
       type: 'checkbox',
