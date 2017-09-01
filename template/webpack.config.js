@@ -19,7 +19,7 @@ var config = {
     filename: '[name].js'
   },
   externals: [
-    function(context, request, callback) {
+    function (context, request, callback) {
       if (undefined === dependencies[request]) {
         callback()
       } else {
