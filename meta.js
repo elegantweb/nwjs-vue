@@ -7,10 +7,10 @@ module.exports = {
       required: true,
       message: 'Application name'
     },
-    productName: {
+    title: {
       type: 'string',
       required: false,
-      message: 'Application product name',
+      message: 'Application title',
       default (data) {
         return S(data.name).humanize().titleCase().s;
       }

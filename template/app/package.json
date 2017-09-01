@@ -1,6 +1,6 @@
 {
   "name": "{{name}}",
-  "productName": "{{productName}}",
+  "title": "{{title}}",
   "description": "{{description}}",
   "version": "1.0.0",
   "author": "{{author}}",
