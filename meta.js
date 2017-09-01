@@ -1,9 +1,19 @@
+var S = require('string')
+
 module.exports = {
   prompts: {
     name: {
       type: 'string',
       required: true,
-      message: 'Application Name'
+      message: 'Application name'
+    },
+    productName: {
+      type: 'string',
+      required: false,
+      message: 'Application product name',
+      default (data) {
+        return S(data.name).humanize().titleCase().s;
+      }
     },
     description: {
       type: 'string',
@@ -26,9 +36,6 @@ module.exports = {
     isNotEnabled (list, check, opts) {
       if (list[check]) return opts.inverse(this)
       else return opts.fn(this)
-    },
-    ucfirst (str) {
-      return str.charAt(0).toUpperCase() + str.slice(1)
     }
   },
   filters: {

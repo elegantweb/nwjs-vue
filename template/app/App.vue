@@ -11,8 +11,8 @@
 <script>
 {{#isNotEnabled plugins 'vue-router'}}
 import LandingPage from '@/components/LandingPage.vue'
-{{/isNotEnabled}}
 
+{{/isNotEnabled}}
 export default {
   name: '{{name}}'{{#isNotEnabled plugins 'vue-router'}},{{/isNotEnabled}}
   {{#isNotEnabled plugins 'vue-router'}}

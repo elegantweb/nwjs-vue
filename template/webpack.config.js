@@ -6,7 +6,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
 var BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
 
-var { dependencies } = require('./app/package.json')
+var { productName, dependencies } = require('./app/package.json')
 
 var config = {
   devtool: '#cheap-module-eval-source-map',
@@ -83,6 +83,7 @@ var config = {
   plugins: [
     new ExtractTextWebpackPlugin('style.css'),
     new HtmlWebpackPlugin({
+      title: productName,
       filename: 'index.html',
       template: './app/index.ejs',
       minify: {

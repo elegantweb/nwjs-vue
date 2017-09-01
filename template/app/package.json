@@ -1,5 +1,6 @@
 {
   "name": "{{name}}",
+  "productName": "{{productName}}",
   "description": "{{description}}",
   "version": "1.0.0",
   "author": "{{author}}",
