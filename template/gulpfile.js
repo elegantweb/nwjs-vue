@@ -3,7 +3,6 @@ var { spawn } = require('child_process')
 var del = require('del')
 var runSequence = require('run-sequence')
 var gulp = require('gulp')
-var gulpIf = require('gulp-if')
 var gulpJsonEditor = require('gulp-json-editor')
 var webpack = require('webpack')
 var WebpackDevServer = require('webpack-dev-server')
@@ -14,32 +13,42 @@ var runPath = path.resolve(__dirname, 'node_modules/.bin/run')
 
 var server
 
-gulp.task('copy-package.json', () => {
+gulp.task('dist-package.json', () => {
   return gulp.src('app/package.json')
-    .pipe(gulpIf(process.env.NODE_ENV === 'production', gulpJsonEditor({main: 'index.html'})))
+    .pipe(gulpJsonEditor({ main: 'index.html' }))
     .pipe(gulp.dest('dist'))
 })
 
-gulp.task('copy-node_modules', () => {
+gulp.task('dist-node_modules', () => {
   return gulp.src('app/node_modules/**/*')
     .pipe(gulp.dest('dist/node_modules'))
 })
 
-gulp.task('copy', (done) => {
-  runSequence(['copy-package.json', 'copy-node_modules'], done)
-})
-
-gulp.task('compile', (done) => {
+gulp.task('compile', (callback) => {
   var webpackConfig = require('./webpack.config.js')
 
   var compiler = webpack(webpackConfig)
 
   compiler.run((err, stats) => {
-    done()
+    if (err) {
+      callback(err.stack || err)
+    } else if (stats.hasErrors()) {
+      callback(stats.toString({ chunks: false, colors: true }))
+    } else {
+      callback()
+    }
   })
 })
 
-gulp.task('serve', (done) => {
+gulp.task('clean-dist', () => {
+  return del('dist/**/*')
+})
+
+gulp.task('dist', (callback) => {
+  runSequence('clean-dist', ['dist-package.json', 'dist-node_modules', 'compile'], callback)
+})
+
+gulp.task('serve', (callback) => {
   var webpackConfig = require('./webpack.config.js')
 
   webpackConfig.entry.main = ['webpack-hot-middleware/client'].concat(webpackConfig.entry.main)
@@ -52,12 +61,12 @@ gulp.task('serve', (done) => {
   })
 
   server = new WebpackDevServer(compiler, {
-    contentBase: path.join(__dirname, 'dist'),
+    contentBase: path.join(__dirname, 'app'),
     quiet: true,
     setup (app, ctx) {
       app.use(hotMiddleware)
       ctx.middleware.waitUntilValid(() => {
-        done()
+        callback()
       })
     }
   })
@@ -65,19 +74,11 @@ gulp.task('serve', (done) => {
   server.listen(9080)
 })
 
-gulp.task('clean-dist', () => {
-  return del('dist/**/*')
-})
-
-gulp.task('dist', (done) => {
-  runSequence('clean-dist', ['copy', 'compile'], done)
-})
-
-gulp.task('dev', (done) => {
-  runSequence('dist', 'serve', () => {
-    spawn(runPath, ['dist'], { stdio: 'inherit' }).on('close', () => {
+gulp.task('dev', (callback) => {
+  runSequence('serve', () => {
+    spawn(runPath, ['app'], { stdio: 'inherit' }).on('close', () => {
       server.close()
-      done()
+      callback()
     })
   })
 })
@@ -86,11 +87,11 @@ gulp.task('clean-build', () => {
   return del('build/**/*')
 })
 
-gulp.task('build', (done) => {
+gulp.task('build', (callback) => {
   process.env.NODE_ENV = 'production'
   runSequence('clean-build', 'dist', () => {
     spawn(buildPath, ['--linux', '--x64', 'dist'], { stdio: 'inherit' }).on('close', () => {
-      done()
+      callback()
     })
   })
 })
