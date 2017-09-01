@@ -1,7 +1,7 @@
 {
   "name": "nwjs-vue",
   "version": "0.0.1",
-  "description": "An NW.js & Vue.js quick start boilerplate",
+  "description": "A NW.js & Vue.js quick start boilerplate",
   "main": "meta.js",
   "repository": {
     "type": "git",
