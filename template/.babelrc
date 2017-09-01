@@ -1,3 +1,13 @@
 {
-  "presets": [["env", {"modules": false}]]
+  "comments": false,
+  "env": {
+    "main": {
+      "presets": [
+        ["env", {
+          "modules": false
+        }]
+      ]
+    }
+  },
+  "plugins": ["transform-runtime"]
 }

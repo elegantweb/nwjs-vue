@@ -1,19 +1,22 @@
+process.env.BABEL_ENV = 'main'
+
 var path = require('path')
 var webpack = require('webpack')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
+var BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
 
 var { dependencies } = require('./app/package.json')
 
 var config = {
   devtool: '#cheap-module-eval-source-map',
   target: 'node-webkit',
-  entry: [
-    './app/main.js'
-  ],
+  entry: {
+    main: './app/main.js'
+  },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'app.js'
+    filename: '[name].js'
   },
   externals: [
     function(context, request, callback) {
@@ -78,8 +81,16 @@ var config = {
     }
   },
   plugins: [
-    new ExtractTextWebpackPlugin('app.css'),
-    new HtmlWebpackPlugin({ template: 'app/index.ejs' }),
+    new ExtractTextWebpackPlugin('style.css'),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: './app/index.ejs',
+      minify: {
+        collapseWhitespace: true,
+        removeAttributeQuotes: true,
+        removeComments: true
+      }
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
   ]
@@ -88,6 +99,7 @@ var config = {
 if (process.env.NODE_ENV === 'production') {
   config.devtool = ''
   config.plugins.push(
+    new BabelMinifyWebpackPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
     }),

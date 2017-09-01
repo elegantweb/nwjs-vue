@@ -9,8 +9,6 @@ var webpack = require('webpack')
 var WebpackDevServer = require('webpack-dev-server')
 var webpackHotMiddleware = require('webpack-hot-middleware')
 
-var webpackConfig = require('./webpack.config.js')
-
 var buildPath = path.resolve(__dirname, 'node_modules/.bin/build')
 var runPath = path.resolve(__dirname, 'node_modules/.bin/run')
 
@@ -32,13 +30,19 @@ gulp.task('copy', (done) => {
 })
 
 gulp.task('compile', (done) => {
-  webpack(webpackConfig, (err, stats) => {
+  var webpackConfig = require('./webpack.config.js')
+
+  var compiler = webpack(webpackConfig)
+
+  compiler.run((err, stats) => {
     done()
   })
 })
 
 gulp.task('serve', (done) => {
-  webpackConfig.entry.push('webpack-hot-middleware/client')
+  var webpackConfig = require('./webpack.config.js')
+
+  webpackConfig.entry.main = ['webpack-hot-middleware/client'].concat(webpackConfig.entry.main)
 
   var compiler = webpack(webpackConfig)
 
