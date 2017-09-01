@@ -12,7 +12,7 @@ module.exports = {
       required: false,
       message: 'Application title',
       default (data) {
-        return S(data.name).humanize().titleCase().s;
+        return S(data.name).humanize().titleCase().s
       }
     },
     description: {
