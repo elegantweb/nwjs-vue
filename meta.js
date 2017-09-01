@@ -24,7 +24,8 @@ module.exports = {
       else return opts.inverse(this)
     },
     isNotEnabled (list, check, opts) {
-      return !this.isEnabled(list, check, opts)
+      if (list[check]) return opts.inverse(this)
+      else return opts.fn(this)
     },
     ucfirst (str) {
       return str.charAt(0).toUpperCase() + str.slice(1)
