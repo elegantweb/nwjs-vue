@@ -1,5 +1,9 @@
 {
   "private": true,
+  "scripts": {
+    "dev": "node build/dev-runner.js",
+    "build": "node build/build.js"
+  },
   "devDependencies": {
     {{#isEnabled plugins 'axios'}}
     "axios": "^0.16.2",
@@ -10,10 +14,9 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "css-loader": "^0.28.4",
-    "del": "^3.0.0",
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.11.1",
-    "gulp": "^3.9.1",
+    "fs-extra": "^4.0.1",
     "gulp-json-editor": "^2.2.1",
     "html-webpack-plugin": "^2.28.0",
     "node-sass": "^4.5.3",
