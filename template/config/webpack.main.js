@@ -6,16 +6,16 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
 var BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
 
-var { dependencies } = require('./app/package.json')
+var { dependencies } = require('./../app/package.json')
 
 var config = {
   devtool: '#cheap-module-eval-source-map',
   target: 'node-webkit',
   entry: {
-    main: './app/main.js'
+    main: path.join(__dirname, '../app/main.js')
   },
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: path.join(__dirname, '../dist'),
     filename: '[name].js'
   },
   externals: [
@@ -40,7 +40,8 @@ var config = {
         options: {
           extractCSS: process.env.NODE_ENV === 'production',
           loaders: {
-            scss: 'vue-style-loader!css-loader!sass-loader'
+            scss: 'vue-style-loader!css-loader!sass-loader',
+            stylus: 'vue-style-loader!css-loader!stylus-loader'
           }
         }
       },
@@ -76,7 +77,7 @@ var config = {
   },
   resolve: {
     alias: {
-      '@': path.join(__dirname, 'app'),
+      '@': path.join(__dirname, '../app'),
       'vue$': 'vue/dist/vue.esm.js'
     }
   },
@@ -84,7 +85,7 @@ var config = {
     new ExtractTextWebpackPlugin('style.css'),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: './app/index.ejs',
+      template: path.join(__dirname, '../app/index.ejs'),
       minify: {
         collapseWhitespace: true,
         removeAttributeQuotes: true,

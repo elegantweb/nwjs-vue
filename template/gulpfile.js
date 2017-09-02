@@ -24,10 +24,10 @@ gulp.task('dist-node_modules', () => {
     .pipe(gulp.dest('dist/node_modules'))
 })
 
-gulp.task('compile', (callback) => {
-  var webpackConfig = require('./webpack.config.js')
+gulp.task('pack-main', (callback) => {
+  var config = require('./config/webpack.main.js')
 
-  var compiler = webpack(webpackConfig)
+  var compiler = webpack(config)
 
   compiler.run((err, stats) => {
     if (err) {
@@ -40,24 +40,35 @@ gulp.task('compile', (callback) => {
   })
 })
 
+gulp.task('pack', (callback) => {
+  runSequence(['pack-main'], callback)
+})
+
 gulp.task('clean-dist', () => {
   return del('dist/**/*')
 })
 
 gulp.task('dist', (callback) => {
-  runSequence('clean-dist', ['dist-package.json', 'dist-node_modules', 'compile'], callback)
+  runSequence('clean-dist', ['dist-package.json', 'dist-node_modules', 'pack'], callback)
 })
 
-gulp.task('serve', (callback) => {
-  var webpackConfig = require('./webpack.config.js')
+gulp.task('start-main', (callback) => {
+  var config = require('./config/webpack.main.js')
 
-  webpackConfig.entry.main = ['webpack-hot-middleware/client'].concat(webpackConfig.entry.main)
+  config.entry.main = [path.join(__dirname, 'build/dev-client.js')].concat(config.entry.main)
 
-  var compiler = webpack(webpackConfig)
+  var compiler = webpack(config)
 
   var hotMiddleware = webpackHotMiddleware(compiler, {
     log: false,
     heartbeat: 2500
+  })
+
+  compiler.plugin('compilation', (compilation) => {
+    compilation.plugin('html-webpack-plugin-after-emit', (data, cb) => {
+      hotMiddleware.publish({ action: 'reload' })
+      cb()
+    })
   })
 
   server = new WebpackDevServer(compiler, {
@@ -74,8 +85,12 @@ gulp.task('serve', (callback) => {
   server.listen(9080)
 })
 
+gulp.task('start', (callback) => {
+  runSequence(['start-main'], callback)
+})
+
 gulp.task('dev', (callback) => {
-  runSequence('serve', () => {
+  runSequence('start', () => {
     spawn(runPath, ['app'], { stdio: 'inherit' }).on('close', () => {
       server.close()
       callback()
