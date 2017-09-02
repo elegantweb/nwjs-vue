@@ -6,13 +6,13 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
 var BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
 
-var { dependencies } = require('./../app/package.json')
+var { dependencies } = require('./../app/package')
 
 var config = {
   devtool: '#cheap-module-eval-source-map',
   target: 'node-webkit',
   entry: {
-    main: path.join(__dirname, '../app/main.js')
+    main: path.join(__dirname, '../app/main')
   },
   output: {
     path: path.join(__dirname, '../dist'),
@@ -29,6 +29,13 @@ var config = {
   ],
   module: {
     rules: [
+      {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: 'css-loader'
+        })
+      },
       {
         test: /\.js$/,
         loader: 'babel-loader',
@@ -76,6 +83,7 @@ var config = {
     ]
   },
   resolve: {
+    extensions: ['.js', '.vue', '.json', '.css'],
     alias: {
       '@': path.join(__dirname, '../app'),
       'vue$': 'vue/dist/vue.esm.js'

@@ -5,7 +5,7 @@ var webpack = require('webpack')
 var WebpackDevServer = require('webpack-dev-server')
 var webpackHotMiddleware = require('webpack-hot-middleware')
 
-var webpackMainConfig = require('./webpack.main.config.js')
+var webpackMainConfig = require('./webpack.main.config')
 
 var runnerPath = path.resolve(__dirname, '../node_modules/.bin/run')
 
@@ -13,7 +13,7 @@ function startMain () {
   return new Promise((resolve, reject) => {
     var config = webpackMainConfig
 
-    config.entry.main = [path.join(__dirname, 'dev-client.js')].concat(config.entry.main)
+    config.entry.main = [path.join(__dirname, 'dev-client')].concat(config.entry.main)
 
     var compiler = webpack(config)
 

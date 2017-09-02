@@ -5,7 +5,8 @@ var path = require('path')
 var { spawn } = require('child_process')
 var webpack = require('webpack')
 
-var webpackMainConfig = require('./webpack.main.config.js')
+var package = require('./../app/package')
+var webpackMainConfig = require('./webpack.main.config')
 
 var builderPath = path.resolve(__dirname, '../node_modules/.bin/build')
 
@@ -18,18 +19,8 @@ function cleanBuild () {
 }
 
 function distPackageJson () {
-  return new Promise((resolve, reject) => {
-    fs.readJson(path.resolve(__dirname, '../app/package.json'), (err, data) => {
-      if (err) reject(err)
-      else {
-        data['main'] = 'index.html'
-        fs.outputJson(path.resolve(__dirname, '../dist/package.json'), data, (err) => {
-          if (err) reject(err)
-          else resolve()
-        })
-      }
-    })
-  })
+  package['main'] = 'index.html'
+  return fs.outputJson(path.resolve(__dirname, '../dist/package.json'), package)
 }
 
 function distNodeModules () {
