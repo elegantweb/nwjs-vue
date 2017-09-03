@@ -31,7 +31,7 @@ var config = {
     rules: [
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
+        use: ExtractTextWebpackPlugin.extract({
           fallback: 'style-loader',
           use: 'css-loader'
         })
