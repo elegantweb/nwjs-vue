@@ -29,6 +29,10 @@ function startMain () {
       })
     })
 
+    compiler.plugin('done', (stats) => {
+      console.log(stats.toString({ chunks: false, colors: true }))
+    })
+
     server = new WebpackDevServer(compiler, {
       contentBase: path.join(__dirname, 'app'),
       quiet: true,
