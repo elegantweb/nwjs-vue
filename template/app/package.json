@@ -11,6 +11,6 @@
   },
   "build": {
     "nwVersion": "0.24.4",
-    "output": "./../releases"
+    "output": "../releases"
   }
 }

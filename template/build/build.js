@@ -1,14 +1,14 @@
 process.env.NODE_ENV = 'production'
 
-var fs = require('fs-extra')
-var path = require('path')
-var { spawn } = require('child_process')
-var webpack = require('webpack')
+const fs = require('fs-extra')
+const path = require('path')
+const { spawn } = require('child_process')
+const webpack = require('webpack')
 
-var manifest = require('./../app/package')
-var webpackMainConfig = require('./webpack.main.config')
+const manifest = require('../app/package')
+const webpackMainConfig = require('./webpack.main.config')
 
-var builderPath = path.resolve(__dirname, '../node_modules/.bin/build')
+const builderPath = path.resolve(__dirname, '../node_modules/.bin/build')
 
 function cleanDist () {
   return fs.emptydir(path.resolve(__dirname, '../dist'))

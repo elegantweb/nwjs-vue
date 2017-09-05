@@ -1,8 +1,11 @@
-var state = {
+const state = {
   main: 0
 }
 
-var mutations = {
+const getters = {
+}
+
+const mutations = {
   DECREMENT_MAIN_COUNTER (state) {
     state.main--
   },
@@ -11,11 +14,12 @@ var mutations = {
   }
 }
 
-var actions = {
+const actions = {
 }
 
 export default {
   state,
+  getters,
   mutations,
   actions
 }

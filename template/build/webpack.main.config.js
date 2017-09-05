@@ -1,18 +1,18 @@
 process.env.BABEL_ENV = 'main'
 
-var path = require('path')
-var webpack = require('webpack')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
-var ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
-var BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
+const BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
 
-var utils = require('./utils')
-var { dependencies } = require('./../app/package')
-var vueLoaderConfig = require('./vue-loader.config')
+const utils = require('./utils')
+const { dependencies } = require('../app/package')
+const vueLoaderConfig = require('./vue-loader.config')
 
-var isProduction = process.env.NODE_ENV === 'production'
+const isProduction = process.env.NODE_ENV === 'production'
 
-var config = {
+let config = {
   devtool: '#cheap-module-eval-source-map',
   target: 'node-webkit',
   entry: {

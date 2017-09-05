@@ -1,27 +1,31 @@
-var fs = require('fs')
-var path = require('path')
-var { spawn } = require('child_process')
-var webpack = require('webpack')
-var WebpackDevServer = require('webpack-dev-server')
-var webpackHotMiddleware = require('webpack-hot-middleware')
+const path = require('path')
+const { spawn } = require('child_process')
+const webpack = require('webpack')
+const WebpackDevServer = require('webpack-dev-server')
+const webpackHotMiddleware = require('webpack-hot-middleware')
 
-var webpackMainConfig = require('./webpack.main.config')
+const webpackMainConfig = require('./webpack.main.config')
 
-var runnerPath = path.resolve(__dirname, '../node_modules/.bin/run')
+const runnerPath = path.resolve(__dirname, '../node_modules/.bin/run')
+
+let nwProcess
+let nwRestarting = false
+let hotMiddleware
 
 function startMain () {
   return new Promise((resolve, reject) => {
-    var config = webpackMainConfig
+    const config = webpackMainConfig
 
     config.entry.main = [path.join(__dirname, 'dev-client')].concat(config.entry.main)
 
-    var compiler = webpack(config)
+    const compiler = webpack(config)
 
-    var hotMiddleware = webpackHotMiddleware(compiler, {
+    hotMiddleware = webpackHotMiddleware(compiler, {
       log: false,
       heartbeat: 2500
     })
 
+    // force page reload when html-webpack-plugin template changes
     compiler.plugin('compilation', (compilation) => {
       compilation.plugin('html-webpack-plugin-after-emit', (data, cb) => {
         hotMiddleware.publish({ action: 'reload' })
@@ -33,7 +37,7 @@ function startMain () {
       console.log(stats.toString({ chunks: false, colors: true }))
     })
 
-    server = new WebpackDevServer(compiler, {
+    const server = new WebpackDevServer(compiler, {
       contentBase: path.join(__dirname, 'app'),
       quiet: true,
       setup (app, ctx) {
@@ -49,7 +53,17 @@ function startMain () {
 }
 
 function startNw () {
-  spawn(runnerPath, ['app'], { stdio: 'inherit' }).on('close', () => {
+  nwProcess = spawn(runnerPath, ['app'], { stdio: 'inherit' })
+
+  nwProcess.stdout.on('data', (data) => {
+    console.log(data)
+  })
+
+  nwProcess.stderr.on('data', (data) => {
+    console.error(data)
+  })
+
+  nwProcess.on('close', () => {
     process.exit()
   })
 }

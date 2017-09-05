@@ -1,6 +1,6 @@
-var utils = require('./utils')
+const utils = require('./utils')
 
-var isProduction = process.env.NODE_ENV === 'production'
+const isProduction = process.env.NODE_ENV === 'production'
 
 module.exports = {
   loaders: utils.cssLoaders({
