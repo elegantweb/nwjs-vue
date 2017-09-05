@@ -22,6 +22,7 @@
     "node-sass": "^4.5.3",
     "nwjs-builder-phoenix": "^1.14.4",
     "sass-loader": "^6.0.5",
+    "url-loader": "^0.5.9",
     "vue": "^2.3.3",
     "vue-loader": "^12.2.1",
     {{#isEnabled plugins 'vue-router'}}

@@ -6,7 +6,11 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
 var BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
 
+var utils = require('./utils')
 var { dependencies } = require('./../app/package')
+var vueLoaderConfig = require('./vue-loader.config')
+
+var isProduction = process.env.NODE_ENV === 'production'
 
 var config = {
   devtool: '#cheap-module-eval-source-map',
@@ -29,13 +33,10 @@ var config = {
   ],
   module: {
     rules: [
-      {
-        test: /\.css$/,
-        use: ExtractTextWebpackPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader'
-        })
-      },
+      ...utils.styleLoaders({
+        sourceMap: !isProduction,
+        extract: isProduction
+      }),
       {
         test: /\.js$/,
         loader: 'babel-loader',
@@ -44,46 +45,40 @@ var config = {
       {
         test: /\.vue$/,
         loader: 'vue-loader',
-        options: {
-          extractCSS: process.env.NODE_ENV === 'production',
-          loaders: {
-            scss: 'vue-style-loader!css-loader!sass-loader',
-            stylus: 'vue-style-loader!css-loader!stylus-loader'
-          }
-        }
+        options: vueLoaderConfig
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         use: {
-          loader: 'file-loader',
+          loader: 'url-loader',
           query: {
             limit: 10000,
-            name: 'imgs/[name]--[folder].[ext]'
+            name: 'img/[name].[hash:7].[ext]'
           }
         }
       },
       {
         test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
-        loader: 'file-loader',
+        loader: 'url-loader',
         options: {
           limit: 10000,
-          name: 'media/[name]--[folder].[ext]'
+          name: 'media/[name].[hash:7].[ext]'
         }
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
         use: {
-          loader: 'file-loader',
+          loader: 'url-loader',
           query: {
             limit: 10000,
-            name: 'fonts/[name]--[folder].[ext]'
+            name: 'fonts/[name].[hash:7].[ext]'
           }
         }
       }
     ]
   },
   resolve: {
-    extensions: ['.js', '.vue', '.json', '.css'],
+    extensions: ['.js', '.vue', '.json'],
     alias: {
       '@': path.join(__dirname, '../app'),
       'vue$': 'vue/dist/vue.esm.js'
@@ -105,15 +100,13 @@ var config = {
   ]
 }
 
-if (process.env.NODE_ENV === 'production') {
-  config.devtool = ''
+if (isProduction) {
+  config.devtool = false
   config.plugins.push(
     new BabelMinifyWebpackPlugin(),
+    // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
-    }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true
     })
   )
 }
