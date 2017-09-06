@@ -22,10 +22,6 @@ module.exports = {
     isEnabled (list, check, opts) {
       if (list[check]) return opts.fn(this)
       else return opts.inverse(this)
-    },
-    isNotEnabled (list, check, opts) {
-      if (list[check]) return opts.inverse(this)
-      else return opts.fn(this)
     }
   },
   filters: {

@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <img src="./assets/logo.png">
     {{#isEnabled plugins 'vue-router'}}
     <router-view></router-view>
     {{else}}
@@ -9,17 +10,27 @@
 </template>
 
 <script>
-{{#isNotEnabled plugins 'vue-router'}}
+{{#isEnabled plugins 'vue-router'}}
+{{else}}
 import LandingPage from './components/LandingPage'
 
-{{/isNotEnabled}}
+{{/isEnabled}}
 export default {
-  name: '{{name}}'{{#isNotEnabled plugins 'vue-router'}},{{/isNotEnabled}}
-  {{#isNotEnabled plugins 'vue-router'}}
+  name: '{{ name }}'{{#isEnabled plugins 'vue-router'}}{{else}},{{/isEnabled}}
+  {{#isEnabled plugins 'vue-router'}}
+  {{else}}
   components: { LandingPage }
-  {{/isNotEnabled}}
+  {{/isEnabled}}
 }
 </script>
 
-<style lang="scss">
+<style>
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
 </style>
