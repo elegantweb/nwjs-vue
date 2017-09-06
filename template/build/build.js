@@ -19,7 +19,7 @@ function cleanBuild () {
 }
 
 function distManifest () {
-  manifest['main'] = 'index.html'
+  manifest['main'] = 'main/index.html'
   return fs.outputJson(path.resolve(__dirname, '../dist/package.json'), manifest)
 }
 

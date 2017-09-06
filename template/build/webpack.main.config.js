@@ -16,10 +16,10 @@ let config = {
   devtool: '#cheap-module-eval-source-map',
   target: 'node-webkit',
   entry: {
-    main: path.join(__dirname, '../app/main')
+    main: path.join(__dirname, '../app/main/main')
   },
   output: {
-    path: path.join(__dirname, '../dist'),
+    path: path.join(__dirname, '../dist/main'),
     filename: '[name].js'
   },
   externals: [
@@ -80,7 +80,7 @@ let config = {
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
-      '@': path.join(__dirname, '../app'),
+      '@': path.join(__dirname, '../app/main'),
       'vue$': 'vue/dist/vue.esm.js'
     }
   },
@@ -88,7 +88,7 @@ let config = {
     new ExtractTextWebpackPlugin('style.css'),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: path.join(__dirname, '../app/index.ejs'),
+      template: path.join(__dirname, '../app/main/index.ejs'),
       minify: {
         collapseWhitespace: true,
         removeAttributeQuotes: true,

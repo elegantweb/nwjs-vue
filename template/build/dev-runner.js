@@ -55,14 +55,6 @@ function startMain () {
 function startNw () {
   nwProcess = spawn(runnerPath, ['app'], { stdio: 'inherit' })
 
-  nwProcess.stdout.on('data', (data) => {
-    console.log(data)
-  })
-
-  nwProcess.stderr.on('data', (data) => {
-    console.error(data)
-  })
-
   nwProcess.on('close', () => {
     process.exit()
   })
