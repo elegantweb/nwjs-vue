@@ -38,7 +38,7 @@ function startMain () {
     })
 
     const server = new WebpackDevServer(compiler, {
-      contentBase: path.join(__dirname, 'app'),
+      contentBase: path.join(__dirname, '../app/main'),
       quiet: true,
       setup (app, ctx) {
         app.use(hotMiddleware)
