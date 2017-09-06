@@ -5,7 +5,6 @@ const path = require('path')
 const { spawn } = require('child_process')
 const webpack = require('webpack')
 
-const manifest = require('../app/package')
 const webpackMainConfig = require('./webpack.main.config')
 
 const builderPath = path.resolve(__dirname, '../node_modules/.bin/build')
@@ -19,12 +18,32 @@ function cleanBuild () {
 }
 
 function distManifest () {
-  manifest['main'] = 'main/index.html'
-  return fs.outputJson(path.resolve(__dirname, '../dist/package.json'), manifest)
+  return new Promise((resolve, reject) => {
+    fs.readJson(path.resolve(__dirname, '../app/package.json'), (err, data) => {
+      if (err) reject(err)
+      else {
+        data['main'] = 'main/index.html'
+        fs.outputJson(path.resolve(__dirname, '../dist/package.json'), data, (err) => {
+          if (err) reject(err)
+          else resolve()
+        })
+      }
+    })
+  })
 }
 
 function distNodeModules () {
-  return fs.copy(path.resolve(__dirname, '../app/node_modules'), path.resolve(__dirname, '../dist/node_modules'))
+  return new Promise((resolve, reject) => {
+    let src = path.resolve(__dirname, '../app/node_modules')
+    if (fs.existsSync(src)) {
+      fs.copy(src, path.resolve(__dirname, '../dist/node_modules'), (err) => {
+        if (err) reject(err)
+        else resolve()
+      })
+    } else {
+      resolve()
+    }
+  })
 }
 
 function packMain () {
