@@ -25,8 +25,8 @@ module.exports = {
     }
   },
   filters: {
-    'src/renderer/router/**/*': 'plugins[\'vue-router\']',
-    'src/renderer/store/**/*': 'plugins[\'vuex\']'
+    'app/main/router/**/*': 'plugins[\'vue-router\']',
+    'app/main/store/**/*': 'plugins[\'vuex\']'
   },
   complete (data) {
     console.log('Done!')
