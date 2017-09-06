@@ -20,7 +20,12 @@
 
 <script>
 export default {
-  name: 'landing-page'
+  name: 'landing-page',
+  data () {
+    return {
+      msg: 'Welcome to Your Vue.js App'
+    }
+  }
 }
 </script>
 
