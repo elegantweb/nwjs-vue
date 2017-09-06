@@ -7,10 +7,10 @@
 ``` bash
 # install vue-cli and scaffold boilerplate
 npm install -g vue-cli
-vue init simulatedgreg/electron-vue my-project
+vue init elegantweb/nwjs-vue <project name>
 
 # install dependencies and run your app
-cd my-project
+cd <project name>
 npm install
 npm run dev
 
