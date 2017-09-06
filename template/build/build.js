@@ -34,7 +34,7 @@ function distManifest () {
 
 function distNodeModules () {
   return new Promise((resolve, reject) => {
-    let src = path.resolve(__dirname, '../app/node_modules')
+    const src = path.resolve(__dirname, '../app/node_modules')
     if (fs.existsSync(src)) {
       fs.copy(src, path.resolve(__dirname, '../dist/node_modules'), (err) => {
         if (err) reject(err)
