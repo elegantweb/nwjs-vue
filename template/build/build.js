@@ -3,11 +3,12 @@ process.env.NODE_ENV = 'production'
 const fs = require('fs-extra')
 const path = require('path')
 const { spawn } = require('child_process')
+const npmWhich = require('npm-which')(__dirname)
 const webpack = require('webpack')
 
 const webpackMainConfig = require('./webpack.main.config')
 
-const builderPath = path.resolve(__dirname, '../node_modules/.bin/build')
+const buildPath = npmWhich.sync('build')
 
 function cleanDist () {
   return fs.emptydir(path.resolve(__dirname, '../dist'))
@@ -61,7 +62,7 @@ function pack (config) {
 }
 
 function build () {
-  spawn(builderPath, ['--linux', '--x64', 'dist'], { stdio: 'inherit' })
+  spawn(buildPath, ['--linux', '--x64', 'dist'], { stdio: 'inherit' })
 }
 
 Promise

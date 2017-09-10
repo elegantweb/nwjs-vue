@@ -1,12 +1,13 @@
 const path = require('path')
 const { spawn } = require('child_process')
+const npmWhich = require('npm-which')(__dirname)
 const webpack = require('webpack')
 const WebpackDevServer = require('webpack-dev-server')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 
 const webpackMainConfig = require('./webpack.main.config')
 
-const runnerPath = path.resolve(__dirname, '../node_modules/.bin/run')
+const runPath = npmWhich.sync('run')
 
 let nwProcess
 let nwRestarting = false
@@ -53,7 +54,7 @@ function startMain () {
 }
 
 function startNw () {
-  nwProcess = spawn(runnerPath, ['app'], { stdio: 'inherit' })
+  nwProcess = spawn(runPath, ['app'], { stdio: 'inherit' })
 
   nwProcess.on('close', () => {
     process.exit()
