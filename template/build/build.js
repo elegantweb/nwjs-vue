@@ -62,7 +62,31 @@ function pack (config) {
 }
 
 function build () {
-  spawn(buildPath, ['--linux', '--x64', 'dist'], { stdio: 'inherit' })
+  let os = ''
+  let arch = ''
+
+  switch (process.platform) {
+    case 'linux':
+      os = '--linux'
+      break
+    case 'darwin':
+      os = '--mac'
+      break
+    case 'win32':
+    default:
+      os = '--win'
+  }
+
+  switch (process.arch) {
+    case 'ia32':
+      arch = '--x86'
+      break
+    case 'x64':
+    default:
+      arch = '--x64'
+  }
+
+  spawn(buildPath, [os, arch, 'dist'], { stdio: 'inherit' })
 }
 
 Promise
