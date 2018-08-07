@@ -1,6 +1,6 @@
 {
   "name": "nwjs-vue",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "A NW.js & Vue.js quick start boilerplate",
   "main": "meta.js",
   "repository": {
