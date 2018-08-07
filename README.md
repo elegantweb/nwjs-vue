@@ -2,9 +2,9 @@
 
 > A NW.js & Vue.js quick start boilerplate
 
-## Getting Started
+### Getting Started
 
-### Installation
+#### Installation
 
 Install vue-cli and scaffold boilerplate:
 
@@ -20,10 +20,9 @@ cd <project name>
 npm install
 ```
 
-### Development
+#### Development
 
 Specify target NW.js version in your `app/package.json`:
-Find available options [here](https://github.com/evshiron/nwjs-builder-phoenix).
 
 ```
 {
@@ -43,9 +42,11 @@ Run NW.js application for development:
 npm run dev
 ```
 
-### Production
+#### Production
 
 Specify target platforms and architectures in your `app/package.json`:
+
+You can find available options [here](https://github.com/evshiron/nwjs-builder-phoenix).
 
 ```
 {
