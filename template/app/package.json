@@ -11,6 +11,8 @@
   },
   "build": {
     "nwVersion": "0.32.1",
+    "nwPlatforms": ["win"],
+    "nwArchs": ["x64"],
     "output": "../releases"
   },
   "dependencies": {

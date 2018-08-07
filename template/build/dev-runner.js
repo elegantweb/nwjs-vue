@@ -13,43 +13,43 @@ let nwProcess
 let nwRestarting = false
 let hotMiddleware
 
+function createServer (config, callback) {
+  // add dev-client file to webpack, so we will be able to handle hot middleware commands on browser
+  config.entry.main = [path.join(__dirname, 'dev-client')].concat(config.entry.main)
+
+  const compiler = webpack(config)
+
+  hotMiddleware = webpackHotMiddleware(compiler, {
+    log: false,
+    heartbeat: 2500
+  })
+
+  // force page reload when html-webpack-plugin template changes
+  compiler.plugin('compilation', (compilation) => {
+    compilation.plugin('html-webpack-plugin-after-emit', (data, cb) => {
+      hotMiddleware.publish({ action: 'reload' })
+      cb()
+    })
+  })
+
+  compiler.plugin('done', (stats) => {
+    console.log(stats.toString({ chunks: false, colors: true }))
+  })
+
+  return new WebpackDevServer(compiler, {
+    quiet: true,
+    before (app, ctx) {
+      app.use(hotMiddleware)
+      ctx.middleware.waitUntilValid(() => {
+        callback()
+      })
+    }
+  })
+}
+
 function startMain () {
   return new Promise((resolve, reject) => {
-    const config = webpackMainConfig
-
-    config.entry.main = [path.join(__dirname, 'dev-client')].concat(config.entry.main)
-
-    const compiler = webpack(config)
-
-    hotMiddleware = webpackHotMiddleware(compiler, {
-      log: false,
-      heartbeat: 2500
-    })
-
-    // force page reload when html-webpack-plugin template changes
-    compiler.plugin('compilation', (compilation) => {
-      compilation.plugin('html-webpack-plugin-after-emit', (data, cb) => {
-        hotMiddleware.publish({ action: 'reload' })
-        cb()
-      })
-    })
-
-    compiler.plugin('done', (stats) => {
-      console.log(stats.toString({ chunks: false, colors: true }))
-    })
-
-    const server = new WebpackDevServer(compiler, {
-      contentBase: path.join(__dirname, '../app/main'),
-      quiet: true,
-      before (app, ctx) {
-        app.use(hotMiddleware)
-        ctx.middleware.waitUntilValid(() => {
-          resolve()
-        })
-      }
-    })
-
-    server.listen(9080)
+    createServer(webpackMainConfig, resolve).listen(9080)
   })
 }
 
@@ -61,11 +61,9 @@ function startNw () {
   })
 }
 
-Promise
-  .all([startMain()])
-  .then(() => {
-    startNw()
-  })
-  .catch((err) => {
-    console.error(err)
-  })
+async function main () {
+  await Promise.all([startMain()])
+  startNw()
+}
+
+main()

@@ -2,10 +2,11 @@ process.env.NODE_ENV = 'production'
 
 const fs = require('fs-extra')
 const path = require('path')
-const { spawn } = require('child_process')
+const { spawnSync } = require('child_process')
 const npmWhich = require('npm-which')(__dirname)
 const webpack = require('webpack')
 
+const { build: buildConfig } = require('../app/package')
 const webpackMainConfig = require('./webpack.main.config')
 
 const buildPath = npmWhich.sync('build')
@@ -62,45 +63,17 @@ function pack (config) {
 }
 
 function build () {
-  let os = ''
-  let arch = ''
-
-  switch (process.platform) {
-    case 'linux':
-      os = '--linux'
-      break
-    case 'darwin':
-      os = '--mac'
-      break
-    case 'win32':
-    default:
-      os = '--win'
-  }
-
-  switch (process.arch) {
-    case 'ia32':
-      arch = '--x86'
-      break
-    case 'x64':
-    default:
-      arch = '--x64'
-  }
-
-  spawn(buildPath, [os, arch, 'dist'], { stdio: 'inherit' })
+  buildConfig.nwPlatforms.forEach((os) => {
+    buildConfig.nwArchs.forEach((arch) => {
+      spawnSync(buildPath, [`--${os}`, `--${arch}`, 'dist'], { stdio: 'inherit' })
+    })
+  })
 }
 
-Promise
-  .all([cleanDist(), cleanBuild()])
-  .then(() => {
-    Promise
-      .all([distManifest(), distNodeModules(), packMain()])
-      .then(() => {
-        build()
-      })
-      .catch((err) => {
-        console.error(err)
-      })
-  })
-  .catch((err) => {
-    console.error(err)
-  })
+async function main () {
+  await Promise.all([cleanDist(), cleanBuild()])
+  await Promise.all([distManifest(), distNodeModules(), packMain()])
+  build()
+}
+
+main()

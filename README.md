@@ -4,16 +4,64 @@
 
 #### Getting Started
 
+##### Installation
+
+Install vue-cli and scaffold boilerplate:
+
 ``` bash
-# install vue-cli and scaffold boilerplate
 npm install -g vue-cli
 vue init elegantweb/nwjs-vue <project name>
+```
 
-# install dependencies and run your app
+Install dependencies:
+
+``` bash
 cd <project name>
 npm install
-npm run dev
+```
 
-# build NW.js application for production
+##### Development
+
+Specify target NW.js version in your `app/package.json`:
+Find available options [here](https://github.com/evshiron/nwjs-builder-phoenix).
+
+``` json
+{
+  [...]
+  "build": {
+    [...]
+    "nwVersion": "0.32.1",
+    [...]
+  },
+  [...]
+}
+```
+
+Run NW.js application for development:
+
+``` bash
+npm run dev
+```
+
+##### Production
+
+Specify target platforms and architectures in your `app/package.json`:
+
+``` json
+{
+  [...]
+  "build": {
+    [...]
+    "nwPlatforms": ["win"],
+    "nwArchs": ["x64"],
+    [...]
+  },
+  [...]
+}
+```
+
+Build NW.js application for production:
+
+``` bash
 npm run build
 ```

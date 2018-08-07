@@ -8,7 +8,7 @@ export default new VueRouter({
     {
       path: '/',
       name: 'landing-page',
-      component: require('@/components/LandingPage')
+      component: require('@/components/LandingPage').default
     },
     {
       path: '*',
