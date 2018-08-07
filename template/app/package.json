@@ -10,7 +10,7 @@
     "height": 563
   },
   "build": {
-    "nwVersion": "0.26.5",
+    "nwVersion": "0.32.1",
     "output": "../releases"
   },
   "dependencies": {

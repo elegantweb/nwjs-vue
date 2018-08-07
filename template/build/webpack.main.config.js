@@ -104,7 +104,7 @@ if (isProduction) {
   config.devtool = false
   config.plugins.push(
     new BabelMinifyWebpackPlugin(),
-    // http://vuejs.github.io/vue-loader/en/workflow/production.html
+    // see: http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
     })
