@@ -7,6 +7,8 @@ const webpackHotMiddleware = require('webpack-hot-middleware')
 
 const webpackMainConfig = require('./webpack.main.config')
 
+const runPath = npmWhich.sync('run')
+
 function createServer (config, callback) {
   // add dev-client file to webpack, so we will be able to handle hot middleware commands on browser
   config.entry.main = [path.join(__dirname, 'dev-client')].concat(config.entry.main)
@@ -48,8 +50,7 @@ function startMain () {
 }
 
 function startNw () {
-  const nwRunPath = npmWhich.sync('run')
-  const nwProcess = spawn(nwRunPath, ['app'], { stdio: 'inherit' })
+  const nwProcess = spawn(runPath, ['app'], { stdio: 'inherit' })
 
   nwProcess.on('close', () => {
     process.exit()
