@@ -6,7 +6,7 @@
 
 #### Installation
 
-Install vue-cli and scaffold boilerplate:
+Install `vue-cli` and scaffold boilerplate:
 
 ``` bash
 npm install -g vue-cli

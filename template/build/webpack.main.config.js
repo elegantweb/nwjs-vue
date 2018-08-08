@@ -5,10 +5,10 @@ const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
 const BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 const utils = require('./utils')
 const { dependencies } = require('../app/package')
-const vueLoaderConfig = require('./vue-loader.config')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -23,6 +23,7 @@ let config = {
     filename: '[name].js'
   },
   externals: [
+    // Externalize all dependencies inside of the application directory.
     function (context, request, callback) {
       if (undefined === dependencies[request]) {
         callback()
@@ -45,7 +46,6 @@ let config = {
       {
         test: /\.vue$/,
         loader: 'vue-loader',
-        options: vueLoaderConfig
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -81,10 +81,14 @@ let config = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       '@': path.join(__dirname, '../app/main'),
+      // see: https://vuejs.org/v2/guide/installation.html#Terms
       'vue$': 'vue/dist/vue.esm.js'
     }
   },
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
+    new VueLoaderPlugin(),
     new ExtractTextWebpackPlugin('style.css'),
     new HtmlWebpackPlugin({
       filename: 'index.html',
@@ -94,9 +98,7 @@ let config = {
         removeAttributeQuotes: true,
         removeComments: true
       }
-    }),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
+    })
   ]
 }
 
