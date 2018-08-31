@@ -10,7 +10,7 @@ module.exports = {
       required: false,
       message: 'Application conventional name',
       default (data) {
-        return data.name.replace(/((?:^|-)[a-z])/g, ($1) => $1.toUpperCase().replace('-', ''))
+        return data.name.replace(/((?:^|-|_)+[a-z])/g, ($1) => $1.toUpperCase().replace('-', ''))
       }
     },
     description: {
@@ -38,7 +38,7 @@ module.exports = {
   },
   complete (data) {
     console.log()
-    console.log('   All set. Welcome to your new nwjs-vue project!')
+    console.log('   Welcome to your new nwjs-vue project!')
     console.log()
     console.log('   Next steps:')
     if (!data.inPlace) console.log(`      \x1b[33m$\x1b[0m cd ${data.destDirName}`)
