@@ -39,6 +39,7 @@ module.exports = {
   complete (data) {
     console.log()
     console.log('   All set. Welcome to your new nwjs-vue project!')
+    console.log()
     console.log('   Next steps:')
     if (!data.inPlace) console.log(`      \x1b[33m$\x1b[0m cd ${data.destDirName}`)
     console.log('      \x1b[33m$\x1b[0m npm install')
