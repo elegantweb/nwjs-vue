@@ -8,7 +8,7 @@ const BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 const utils = require('./utils')
-const { dependencies } = require('../app/package')
+const { label, dependencies } = require('../app/package')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -91,6 +91,7 @@ let config = {
     new VueLoaderPlugin(),
     new ExtractTextWebpackPlugin('style.css'),
     new HtmlWebpackPlugin({
+      title: label,
       filename: 'index.html',
       template: path.join(__dirname, '../app/main/index.ejs'),
       minify: {

@@ -5,10 +5,18 @@ module.exports = {
       required: true,
       message: 'Application name'
     },
+    label: {
+      type: 'string',
+      required: false,
+      message: 'Application conventional name',
+      default (data) {
+        return data.name.replace(/((?:^|-)[a-z])/g, ($1) => $1.toUpperCase().replace('-', ''))
+      }
+    },
     description: {
       type: 'string',
       required: false,
-      message: 'Project description',
+      message: 'Application description',
       default: 'A nwjs-vue application'
     },
     plugins: {
@@ -29,6 +37,10 @@ module.exports = {
     'app/main/store/**/*': 'plugins[\'vuex\']'
   },
   complete (data) {
-    console.log('Done!')
+    console.log('All set. Welcome to your new nwjs-vue project!')
+    console.log('Next steps:')
+    if (!data.inPlace) console.log(`  \x1b[33m$\x1b[0m cd ${data.destDirName}`)
+    console.log('  \x1b[33m$\x1b[0m npm install')
+    console.log('  \x1b[33m$\x1b[0m npm run dev')
   }
 }
