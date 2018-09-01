@@ -6,25 +6,29 @@ const { spawnSync } = require('child_process')
 const npmWhich = require('npm-which')(__dirname)
 const webpack = require('webpack')
 
-const { build: buildConfig } = require('../app/package')
 const webpackMainConfig = require('./webpack.main.config')
+const webpackBgConfig = require('./webpack.bg.config')
+
+const { build: buildConfig } = require('../package')
 
 const buildPath = npmWhich.sync('build')
 
 function cleanDist () {
-  return fs.emptydir(path.resolve(__dirname, '../dist'))
+  return fs.emptydir(path.resolve(__dirname, '../', './dist'))
 }
 
 function cleanBuild () {
-  return fs.emptydir(path.resolve(__dirname, '../releases'))
+  return fs.emptydir(path.resolve(__dirname, '../', buildConfig.output))
 }
 
 function distManifest () {
   return new Promise((resolve, reject) => {
-    fs.readJson(path.resolve(__dirname, '../app/package.json'), (err, data) => {
+    fs.readJson(path.resolve(__dirname, '../package.json'), (err, data) => {
       if (err) reject(err)
       else {
-        data['main'] = 'main/index.html'
+        data.main = 'main/index.html'
+        data['bg-script'] = 'bg/bg.js'
+        data.build.output = path.relative('../dist', path.resolve('../', data.build.output))
         fs.outputJson(path.resolve(__dirname, '../dist/package.json'), data, (err) => {
           if (err) reject(err)
           else resolve()
@@ -36,20 +40,15 @@ function distManifest () {
 
 function distNodeModules () {
   return new Promise((resolve, reject) => {
-    const src = path.resolve(__dirname, '../app/node_modules')
-    if (fs.existsSync(src)) {
-      fs.copy(src, path.resolve(__dirname, '../dist/node_modules'), (err) => {
+    const src = path.resolve(__dirname, '../node_modules')
+    if (!fs.existsSync(src)) resolve()
+    else {
+      fs.copy(src, path.resolve(__dirname, '../dist/node_modules'), { dereference: true }, (err) => {
         if (err) reject(err)
         else resolve()
       })
-    } else {
-      resolve()
     }
   })
-}
-
-function packMain () {
-  return pack(webpackMainConfig)
 }
 
 function pack (config) {
@@ -62,6 +61,14 @@ function pack (config) {
   })
 }
 
+function packMain () {
+  return pack(webpackMainConfig)
+}
+
+function packBg () {
+  return pack(webpackBgConfig)
+}
+
 function build () {
   buildConfig.nwPlatforms.forEach((os) => {
     buildConfig.nwArchs.forEach((arch) => {
@@ -72,7 +79,7 @@ function build () {
 
 async function main () {
   await Promise.all([cleanDist(), cleanBuild()])
-  await Promise.all([distManifest(), distNodeModules(), packMain()])
+  await Promise.all([distManifest(), distNodeModules(), packMain(), packBg()])
   build()
 }
 

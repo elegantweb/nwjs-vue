@@ -1,8 +1,27 @@
 {
-  "private": true,
+  "name": "{{ name }}",
+  "label": "{{ label }}",
+  "description": "{{ description }}",
+  "version": "1.0.0",
+  "author": "{{ author }}",
+  "main": "http://localhost:9080",
+  "bg-script": "./dist/bg/bg.js",
+  "node-remote": "*://localhost/*",
+  "window": {
+    "width": 1000,
+    "height": 563
+  },
+  "build": {
+    "output": "../releases",
+    "nwVersion": "0.32.1",
+    "nwPlatforms": ["win"],
+    "nwArchs": ["x64"],
+  },
   "scripts": {
     "dev": "node build/dev-runner.js",
-    "build": "node build/build.js"
+    "build": "node build/runner.js"
+  },
+  "dependencies": {
   },
   "devDependencies": {
     {{#isEnabled plugins 'axios'}}

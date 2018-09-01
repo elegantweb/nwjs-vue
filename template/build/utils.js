@@ -30,6 +30,13 @@ function generateLoaders (loader, options) {
   }
 }
 
+function generateStyleLoader (extension, loader) {
+  return {
+    test: new RegExp('\\.' + extension + '$'),
+    use: loader
+  }
+}
+
 exports.cssLoaders = function (options) {
   return {
     css: generateLoaders('css', Object.assign({}, options, { minimize: isProduction })),
@@ -44,14 +51,7 @@ exports.cssLoaders = function (options) {
 
 // Generate loaders for standalone style files
 exports.styleLoaders = function (options) {
-  let output = []
-  let loaders = exports.cssLoaders(options)
-  for (let extension in loaders) {
-    let loader = loaders[extension]
-    output.push({
-      test: new RegExp('\\.' + extension + '$'),
-      use: loader
-    })
-  }
+  let output = [], loaders = exports.cssLoaders(options)
+  for (let ext in loaders) output.push(generateStyleLoader(ext, loaders[ext]))
   return output
 }

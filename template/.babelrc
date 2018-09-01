@@ -4,6 +4,9 @@
   "env": {
     "main": {
       "presets": [["env", { "modules": false }], "stage-0"]
+    },
+    "bg": {
+      "presets": [["env", { "modules": false }], "stage-0"]
     }
   }
 }

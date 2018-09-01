@@ -8,7 +8,7 @@ const BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 const utils = require('./utils')
-const { label, dependencies } = require('../app/package')
+const { label, dependencies } = require('../package')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -16,7 +16,7 @@ let config = {
   devtool: '#cheap-module-eval-source-map',
   target: 'node-webkit',
   entry: {
-    main: path.join(__dirname, '../app/main/main')
+    main: path.join(__dirname, '../src/main/main')
   },
   output: {
     path: path.join(__dirname, '../dist/main'),
@@ -80,7 +80,7 @@ let config = {
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
-      '@': path.join(__dirname, '../app/main'),
+      '@': path.join(__dirname, '../src/main'),
       // see: https://vuejs.org/v2/guide/installation.html#Terms
       'vue$': 'vue/dist/vue.esm.js'
     }
@@ -93,7 +93,7 @@ let config = {
     new HtmlWebpackPlugin({
       title: label,
       filename: 'index.html',
-      template: path.join(__dirname, '../app/main/index.ejs'),
+      template: path.join(__dirname, '../src/main/index.ejs'),
       minify: {
         collapseWhitespace: true,
         removeAttributeQuotes: true,

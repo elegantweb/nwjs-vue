@@ -22,7 +22,9 @@ npm install
 
 #### Development
 
-Specify target NW.js version in your `app/package.json`:
+Specify target NW.js version in `package.json`:
+
+You can find available options [here](https://github.com/evshiron/nwjs-builder-phoenix).
 
 ```
 {
@@ -44,7 +46,7 @@ npm run dev
 
 #### Production
 
-Specify target platforms and architectures in your `app/package.json`:
+Specify target platforms and architectures in `package.json`:
 
 You can find available options [here](https://github.com/evshiron/nwjs-builder-phoenix).
 

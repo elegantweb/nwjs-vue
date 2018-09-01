@@ -6,16 +6,22 @@ const WebpackDevServer = require('webpack-dev-server')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 
 const webpackMainConfig = require('./webpack.main.config')
+const webpackBgConfig = require('./webpack.bg.config')
 
 const runPath = npmWhich.sync('run')
 
-function createServer (config, callback) {
+let nwProcess = null
+let nwRestarting = false
+
+let mainHotMiddleware = null
+
+function createMainServer (config, callback) {
   // add dev-client file to webpack, so we will be able to handle hot middleware commands on browser
   config.entry.main = [path.join(__dirname, 'dev-client')].concat(config.entry.main)
 
   const compiler = webpack(config)
 
-  const hotMiddleware = webpackHotMiddleware(compiler, {
+  mainHotMiddleware = webpackHotMiddleware(compiler, {
     log: false,
     heartbeat: 2500
   })
@@ -23,7 +29,7 @@ function createServer (config, callback) {
   // force page reload when html-webpack-plugin template changes
   compiler.plugin('compilation', (compilation) => {
     compilation.plugin('html-webpack-plugin-after-emit', (data, cb) => {
-      hotMiddleware.publish({ action: 'reload' })
+      mainHotMiddleware.publish({ action: 'reload' })
       cb()
     })
   })
@@ -35,7 +41,7 @@ function createServer (config, callback) {
   return new WebpackDevServer(compiler, {
     quiet: true,
     before (app, ctx) {
-      app.use(hotMiddleware)
+      app.use(mainHotMiddleware)
       ctx.middleware.waitUntilValid(() => {
         callback()
       })
@@ -43,22 +49,66 @@ function createServer (config, callback) {
   })
 }
 
+function createBgServer (config, callback) {
+  const compiler = webpack(config)
+
+  compiler.plugin('watch-run', (compilation, cb) => {
+    console.log('Compiling background script...')
+    mainHotMiddleware.publish({ action: 'compiling' })
+    cb()
+  })
+
+  compiler.watch({}, (err, stats) => {
+    if (err) console.error(err)
+    else {
+      console.log(stats.toString({ chunks: false, colors: true }))
+      mainHotMiddleware.publish({ action: 'compiled' })
+      callback()
+    }
+  })
+}
+
+function createNwProcess (callback) {
+  nwProcess = spawn(runPath, ['.'])
+
+  nwProcess.stdout.on('data', (data) => {
+    const msg = data.toString('utf8')
+    console.log(msg)
+    if (msg.includes('Launching NW.js app')) {
+      callback()
+    }
+  })
+
+  nwProcess.stderr.on('data', (data) => {
+    const msg = data.toString('utf8')
+    console.error(msg)
+  })
+
+  nwProcess.on('close', () => {
+    if (!nwRestarting) process.exit()
+  })
+}
+
 function startMain () {
   return new Promise((resolve, reject) => {
-    createServer(webpackMainConfig, resolve).listen(9080)
+    createMainServer(webpackMainConfig, resolve).listen(9080)
+  })
+}
+
+function startBg () {
+  return new Promise((resolve, reject) => {
+    createBgServer(webpackBgConfig, resolve)
   })
 }
 
 function startNw () {
-  const nwProcess = spawn(runPath, ['app'], { stdio: 'inherit' })
-
-  nwProcess.on('close', () => {
-    process.exit()
+  return new Promise((resolve, reject) => {
+    createNwProcess(resolve)
   })
 }
 
 async function main () {
-  await Promise.all([startMain()])
+  await Promise.all([startMain(), startBg()])
   startNw()
 }
 
