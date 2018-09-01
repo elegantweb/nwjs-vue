@@ -5,14 +5,17 @@
   "version": "1.0.0",
   "author": "{{ author }}",
   "private": true,
-  "main": "http://localhost:9080",
-  "bg-script": "./dist/bg/bg.js",
+  "main": "./dist/bg/bg.js",
   "node-remote": "*://localhost/*",
   "window": {
     "width": 1000,
     "height": 563
   },
   "build": {
+    "files": [
+      "**/node_modules/**",
+      "./dist/**/*"
+    ],
     "output": "./releases",
     "nwVersion": "0.32.4",
     "nwPlatforms": [

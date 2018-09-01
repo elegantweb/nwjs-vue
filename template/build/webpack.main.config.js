@@ -25,10 +25,10 @@ let config = {
   externals: [
     // Externalize all dependencies inside of the application directory.
     function (context, request, callback) {
-      if (dependencies && undefined === dependencies[request]) {
-        callback()
-      } else {
+      if (dependencies && dependencies[request]) {
         return callback(null, 'commonjs ' + request)
+      } else {
+        callback()
       }
     }
   ],

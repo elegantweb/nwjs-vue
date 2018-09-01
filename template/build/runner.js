@@ -13,36 +13,12 @@ const manifest = require('../package')
 
 const buildPath = npmWhich.sync('build')
 
-function resolveManifest (manifest) {
-  data = Object.assign({}, manifest)
-  data.main = 'main/index.html'
-  data['bg-script'] = 'bg/bg.js'
-  data.build.output = path.relative('../dist', path.resolve('../', manifest.build.output))
-  return data
-}
-
 function cleanDist () {
-  return fs.emptydir(path.resolve(__dirname, '../', './dist'))
+  return fs.emptydir(path.resolve(__dirname, '../', 'dist'))
 }
 
-function distManifest () {
-  return new Promise((resolve, reject) => {
-    data = resolveManifest(manifest)
-    fs.outputJson(path.resolve(__dirname, '../dist/package.json'), data, (err) => {
-      if (err) reject(err)
-      else resolve()
-    })
-  })
-}
-
-function distNodeModules () {
-  return new Promise((resolve, reject) => {
-    const src = path.resolve(__dirname, '../node_modules')
-    fs.copy(src, path.resolve(__dirname, '../dist/node_modules'), { dereference: true }, (err) => {
-      if (err) reject(err)
-      else resolve()
-    })
-  })
+function cleanBuild () {
+  return fs.emptydir(path.resolve(__dirname, '../', manifest.build.output))
 }
 
 function pack (config) {
@@ -66,14 +42,14 @@ function packBg () {
 function build () {
   manifest.build.nwPlatforms.forEach((os) => {
     manifest.build.nwArchs.forEach((arch) => {
-      spawnSync(buildPath, [`--${os}`, `--${arch}`, 'dist'], { stdio: 'inherit' })
+      spawnSync(buildPath, [`--${os}`, `--${arch}`, '.'], { stdio: 'inherit' })
     })
   })
 }
 
 async function main () {
-  await Promise.all([cleanDist()])
-  await Promise.all([distManifest(), distNodeModules(), packMain(), packBg()])
+  await Promise.all([cleanDist(), cleanBuild()])
+  await Promise.all([packMain(), packBg()])
   build()
 }
 
