@@ -25,7 +25,7 @@ let config = {
   externals: [
     // Externalize all dependencies inside of the application directory.
     function (context, request, callback) {
-      if (undefined === dependencies[request]) {
+      if (dependencies && undefined === dependencies[request]) {
         callback()
       } else {
         return callback(null, 'commonjs ' + request)
@@ -106,7 +106,9 @@ let config = {
 if (isProduction) {
   config.devtool = false
   config.plugins.push(
-    new BabelMinifyWebpackPlugin(),
+    new BabelMinifyWebpackPlugin({}, {
+      comments: false
+    }),
     // see: http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'

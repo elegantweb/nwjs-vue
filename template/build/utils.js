@@ -38,9 +38,10 @@ function generateStyleLoader (extension, loader) {
 }
 
 exports.cssLoaders = function (options) {
+  options = Object.assign({}, options, { minimize: isProduction })
   return {
-    css: generateLoaders('css', Object.assign({}, options, { minimize: isProduction })),
-    postcss: generateLoaders('css', Object.assign({}, options, { minimize: isProduction })),
+    css: generateLoaders('css', options),
+    postcss: generateLoaders('css', options),
     less: generateLoaders('less', options),
     sass: generateLoaders('sass', Object.assign({}, options, { indentedSyntax: true })),
     scss: generateLoaders('sass', options),
