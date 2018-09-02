@@ -1,6 +1,6 @@
 # nwjs-vue
 
-> A NW.js & Vue.js quick start boilerplate
+> A NW.js & Vue.js quick start boilerplate.
 
 ### Getting Started
 
