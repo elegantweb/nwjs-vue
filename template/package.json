@@ -13,8 +13,8 @@
   },
   "build": {
     "files": [
-      "**/node_modules/**",
-      "./dist/**/*"
+      "node_modules/**/*",
+      "dist/**/*"
     ],
     "output": "./releases",
     "nwVersion": "0.32.4",
