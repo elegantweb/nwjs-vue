@@ -49,11 +49,22 @@ let config = {
   ]
 }
 
+if (!isProduction) {
+  config.plugins.push(
+    new webpack.DefinePlugin({
+      '__static': JSON.stringify(path.join(__dirname, '../static'))
+    })
+  )
+}
+
 if (isProduction) {
   config.devtool = false
   config.plugins.push(
     new BabelMinifyWebpackPlugin({}, {
       comments: false
+    }),
+    new webpack.DefinePlugin({
+      '__static': '"dist/static"'
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'

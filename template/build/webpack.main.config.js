@@ -5,6 +5,7 @@ const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
 const BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 const utils = require('./utils')
@@ -103,12 +104,30 @@ let config = {
   ]
 }
 
+if (!isProduction) {
+  config.plugins.push(
+    new webpack.DefinePlugin({
+      '__static': JSON.stringify(path.join(__dirname, '../static'))
+    })
+  )
+}
+
 if (isProduction) {
   config.devtool = false
   config.plugins.push(
     new BabelMinifyWebpackPlugin({}, {
       comments: false
     }),
+    new webpack.DefinePlugin({
+      '__static': '"dist/static"'
+    }),
+    new CopyWebpackPlugin([
+      {
+        from: path.join(__dirname, '../static'),
+        to: path.join(__dirname, '../dist/static'),
+        ignore: ['.*']
+      }
+    ]),
     // see: http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
