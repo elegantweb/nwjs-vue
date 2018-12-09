@@ -63,6 +63,7 @@ function createBgServer (config, callback) {
     else {
       console.log(stats.toString({ chunks: false, colors: true }))
       mainHotMiddleware.publish({ action: 'compiled' })
+      if (nwProcess) nwRestarting = true
       callback()
     }
   })
@@ -85,7 +86,8 @@ function createNwProcess (callback) {
   })
 
   nwProcess.on('close', () => {
-    if (!nwRestarting) process.exit()
+    if (nwRestarting) startNw().then(() => { nwRestarting = false })
+    else process.exit()
   })
 }
 
