@@ -2,7 +2,7 @@ process.env.BABEL_ENV = 'bg'
 
 const path = require('path')
 const webpack = require('webpack')
-const BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
+const TerserJSPlugin = require('terser-webpack-plugin')
 
 const utils = require('./utils')
 const { dependencies } = require('../package')
@@ -10,6 +10,7 @@ const { dependencies } = require('../package')
 const isProduction = process.env.NODE_ENV === 'production'
 
 let config = {
+  mode: isProduction ? 'production' : 'development',
   devtool: '#cheap-module-eval-source-map',
   target: 'node-webkit',
   entry: {
@@ -44,6 +45,11 @@ let config = {
       '@': path.join(__dirname, '../src/bg')
     }
   },
+  optimization: {
+    minimizer: [
+      new TerserJSPlugin({ terserOptions: { output: { comments: false } } })
+    ]
+  },
   plugins: [
     new webpack.NoEmitOnErrorsPlugin()
   ]
@@ -60,14 +66,8 @@ if (!isProduction) {
 if (isProduction) {
   config.devtool = false
   config.plugins.push(
-    new BabelMinifyWebpackPlugin({}, {
-      comments: false
-    }),
     new webpack.DefinePlugin({
       '__static': '"dist/static"'
-    }),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"'
     })
   )
 }

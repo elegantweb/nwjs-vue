@@ -27,14 +27,14 @@ function createMainServer (config, callback) {
   })
 
   // force page reload when html-webpack-plugin template changes
-  compiler.plugin('compilation', (compilation) => {
-    compilation.plugin('html-webpack-plugin-after-emit', (data, cb) => {
+  compiler.hooks.compilation.tap('compilation', (compilation) => {
+    compilation.hooks.htmlWebpackPluginAfterEmit.tapAsync('html-webpack-plugin-after-emit', (data, cb) => {
       mainHotMiddleware.publish({ action: 'reload' })
       cb()
     })
   })
 
-  compiler.plugin('done', (stats) => {
+  compiler.hooks.done.tap('done', (stats) => {
     console.log(stats.toString({ chunks: false, colors: true }))
   })
 
@@ -52,7 +52,7 @@ function createMainServer (config, callback) {
 function createBgServer (config, callback) {
   const compiler = webpack(config)
 
-  compiler.plugin('watch-run', (compilation, cb) => {
+  compiler.hooks.watchRun.tapAsync('watch-run', (compilation, cb) => {
     console.log('Compiling background script...')
     mainHotMiddleware.publish({ action: 'compiling' })
     cb()

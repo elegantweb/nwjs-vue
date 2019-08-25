@@ -3,8 +3,9 @@ process.env.BABEL_ENV = 'main'
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
-const BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const TerserJSPlugin = require('terser-webpack-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
@@ -14,6 +15,7 @@ const { label, dependencies } = require('../package')
 const isProduction = process.env.NODE_ENV === 'production'
 
 let config = {
+  mode: isProduction ? 'production' : 'development',
   devtool: '#cheap-module-eval-source-map',
   target: 'node-webkit',
   entry: {
@@ -86,11 +88,17 @@ let config = {
       'vue$': 'vue/dist/vue.esm.js'
     }
   },
+  optimization: {
+    minimizer: [
+      new TerserJSPlugin({ terserOptions: { output: { comments: false } } }),
+      new OptimizeCSSAssetsPlugin()
+    ]
+  },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new VueLoaderPlugin(),
-    new ExtractTextWebpackPlugin('style.css'),
+    new MiniCssExtractPlugin({ filename: 'style.css' }),
     new HtmlWebpackPlugin({
       title: label,
       filename: 'index.html',
@@ -115,22 +123,13 @@ if (!isProduction) {
 if (isProduction) {
   config.devtool = false
   config.plugins.push(
-    new BabelMinifyWebpackPlugin({}, {
-      comments: false
-    }),
+    new CopyWebpackPlugin([{
+      from: path.join(__dirname, '../static'),
+      to: path.join(__dirname, '../dist/static'),
+      ignore: ['.*']
+    }]),
     new webpack.DefinePlugin({
       '__static': '"dist/static"'
-    }),
-    new CopyWebpackPlugin([
-      {
-        from: path.join(__dirname, '../static'),
-        to: path.join(__dirname, '../dist/static'),
-        ignore: ['.*']
-      }
-    ]),
-    // see: http://vuejs.github.io/vue-loader/en/workflow/production.html
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"'
     })
   )
 }

@@ -1,33 +1,33 @@
-const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
 function generateLoader (loader, options) {
   return {
     loader: loader + '-loader',
-    options: Object.assign({}, options, {
+    options: {
       sourceMap: options.sourceMap
-    })
+    }
   }
 }
 
-// see: https://vue-loader.vuejs.org/guide/extract-css.html#webpack-3
-function generateExtracted (loaders) {
-  return ExtractTextWebpackPlugin.extract({
-    use: loaders,
-    fallback: 'vue-style-loader'
-  })
+// see: https://vue-loader.vuejs.org/guide/extract-css.html#webpack-4
+function generateExtracter (options) {
+  return {
+    loader: MiniCssExtractPlugin.loader,
+    options: {
+      hmr: !isProduction
+    }
+  }
 }
 
 function generateLoaders (loader, options) {
   let loaders = []
+  if (options.extract) loaders.push(generateExtracter(options))
+  else loaders.push('vue-style-loader')
   if (loader != 'css') loaders.push(generateLoader('css', options))
   loaders.push(generateLoader(loader, options))
-  if (options.extract) {
-    return generateExtracted(loaders)
-  } else {
-    return ['vue-style-loader'].concat(loaders)
-  }
+  return loaders
 }
 
 function generateStyleLoader (extension, loader) {
@@ -38,7 +38,6 @@ function generateStyleLoader (extension, loader) {
 }
 
 exports.cssLoaders = function (options) {
-  options = Object.assign({}, options, { minimize: isProduction })
   return {
     css: generateLoaders('css', options),
     postcss: generateLoaders('css', options),
