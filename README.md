@@ -6,10 +6,10 @@
 
 #### Installation
 
-Install `vue-cli` and scaffold boilerplate:
+Install boilerplate:
 
 ``` bash
-npm install -g vue-cli
+npm install -g @vue/cli @vue/cli-init
 vue init elegantweb/nwjs-vue <project name>
 ```
 
