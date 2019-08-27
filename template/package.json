@@ -5,8 +5,9 @@
   "version": "1.0.0",
   "author": "{{ author }}",
   "private": true,
-  "main": "./dist/bg/bg.js",
+  "main": "http://localhost:9080",
   "node-remote": "*://localhost/*",
+  "bg-script": "./dist/bg/bg.js",
   "window": {
     "width": 1000,
     "height": 563
@@ -17,17 +18,27 @@
       "dist/**/*"
     ],
     "output": "./releases",
-    "nwVersion": "0.32.4",
+    "nwVersion": "0.40.1",
     "nwPlatforms": [
       "win"
     ],
     "nwArchs": [
       "x64"
-    ]
+    ],
+    "strippedProperties": [
+      "label",
+      "private",
+      "scripts",
+      "devDependencies",
+      "build"
+    ],
+    "overriddenProperties": {
+      "main": "./dist/main/index.html"
+    }
   },
   "scripts": {
-    "dev": "node build/dev-runner.js",
-    "build": "node build/runner.js"
+    "dev": "node .nwjs-vue/dev-runner.js",
+    "build": "node .nwjs-vue/prod-builder.js"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",

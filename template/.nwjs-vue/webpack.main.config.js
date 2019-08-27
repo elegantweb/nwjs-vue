@@ -90,8 +90,16 @@ let config = {
   },
   optimization: {
     minimizer: [
-      new TerserJSPlugin({ terserOptions: { output: { comments: false } } }),
-      new OptimizeCSSAssetsPlugin()
+      new TerserJSPlugin({
+        terserOptions: {
+          output: { comments: false }
+        }
+      }),
+      new OptimizeCSSAssetsPlugin({
+        cssProcessorPluginOptions: {
+          preset: ['default', { discardComments: { removeAll: true } }],
+        }
+      })
     ]
   },
   plugins: [
@@ -123,14 +131,16 @@ if (!isProduction) {
 if (isProduction) {
   config.devtool = false
   config.plugins.push(
-    new CopyWebpackPlugin([{
-      from: path.join(__dirname, '../static'),
-      to: path.join(__dirname, '../dist/static'),
-      ignore: ['.*']
-    }]),
     new webpack.DefinePlugin({
       '__static': '"dist/static"'
-    })
+    }),
+    new CopyWebpackPlugin([
+      {
+        from: path.join(__dirname, '../static'),
+        to: path.join(__dirname, '../dist/static'),
+        ignore: ['.*']
+      }
+    ])
   )
 }
 

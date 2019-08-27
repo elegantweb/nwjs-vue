@@ -47,7 +47,11 @@ let config = {
   },
   optimization: {
     minimizer: [
-      new TerserJSPlugin({ terserOptions: { output: { comments: false } } })
+      new TerserJSPlugin({
+        terserOptions: {
+          output: { comments: false }
+        }
+      })
     ]
   },
   plugins: [

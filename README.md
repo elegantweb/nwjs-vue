@@ -31,7 +31,7 @@ You can find available options [here](https://github.com/evshiron/nwjs-builder-p
   [...]
   "build": {
     [...]
-    "nwVersion": "0.32.1",
+    "nwVersion": "0.40.1",
     [...]
   },
   [...]

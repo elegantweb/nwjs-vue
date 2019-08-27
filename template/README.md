@@ -1,6 +1,6 @@
-# {{ name }}
+# nwjs-vue-test
 
-> {{ description }}
+> A nwjs-vue application
 
 #### Build Setup
 
@@ -8,7 +8,7 @@
 # install dependencies
 npm install
 
-# serve with hot reload at localhost:9080
+# run NW.js application for development
 npm run dev
 
 # build NW.js application for production

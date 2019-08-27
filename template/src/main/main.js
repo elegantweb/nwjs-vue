@@ -14,6 +14,7 @@ import store from './store'
 {{#isEnabled plugins 'axios'}}
 Vue.http = Vue.prototype.$http = axios
 {{/isEnabled}}
+
 Vue.config.productionTip = false
 
 new Vue({
