@@ -42,6 +42,7 @@ function createMainServer (config, callback) {
 
   return new WebpackDevServer(compiler, {
     quiet: true,
+    disableHostCheck: true,
     before (app, ctx) {
       app.use(mainHotMiddleware)
       ctx.middleware.waitUntilValid(() => {
