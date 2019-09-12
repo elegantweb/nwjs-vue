@@ -1,6 +1,6 @@
-# nwjs-vue-test
+# {{ name }}
 
-> A nwjs-vue application
+> {{ description }}
 
 #### Build Setup
 
