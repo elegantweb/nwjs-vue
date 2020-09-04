@@ -2,9 +2,7 @@
 
 > A NW.js & Vue.js quick start boilerplate.
 
-### Getting Started
-
-#### Installation
+## Installation
 
 Install boilerplate:
 
@@ -20,7 +18,9 @@ cd <project name>
 npm install
 ```
 
-#### Development
+## Getting Started
+
+### Development
 
 Specify target NW.js version in `package.json`:
 
@@ -44,7 +44,7 @@ Run NW.js application for development:
 npm run dev
 ```
 
-#### Production
+### Production
 
 Specify target platforms and architectures in `package.json`:
 
