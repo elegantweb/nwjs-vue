@@ -1,6 +1,6 @@
 # nwjs-vue
 
-> A NW.js & Vue.js quick start boilerplate.
+> A clean NW.js & Vue.js quick start boilerplate.
 
 ## Installation
 
