@@ -68,3 +68,10 @@ Build NW.js application for production:
 ``` bash
 npm run build
 ```
+
+
+## Alternatives
+
+* [NW Vue 3 Boilerplate](https://github.com/nwutils/nw-vue3-boilerplate) - NW.js + Vue 3 + Vite + Vitest + Vue-DevTools + Pinia
+* [nw-vue-cli-example](https://github.com/nwutils/nw-vue-cli-example) - Uses Vue-CLI, has Vue 2 and Vue 3 branches.
+* [vue-desktop-basic](https://github.com/TheJaredWilcurt/vue-desktop-basic) - Does not use a build system at all, all `.vue` files run directly in the browser context
